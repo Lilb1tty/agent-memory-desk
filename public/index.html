@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent Memory Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400..600;1,7..72,400..600&family=Schibsted+Grotesk:wght@400..800&display=swap" rel="stylesheet">
+<link href="app.css" rel="stylesheet">
+<script src="app.js" defer></script>
+</head>
+<body>
+<div id="app">
+<header id="top">
+  <h1 title="What your coding agents keep between sessions">Agent memory</h1>
+  <nav id="harnesses" role="tablist" aria-label="Agent"></nav>
+  <button type="button" class="btn btn-quiet" id="trashBtn">Trash <span id="trashCount"></span></button>
+</header>
+<aside id="rail">
+  <ul id="places"></ul>
+  <div class="railfoot">
+    <label><input type="checkbox" id="showEmpty"> Show projects with no files</label>
+  </div>
+</aside>
+
+<section id="list" aria-label="Files">
+  <div class="listhead">
+    <h2 id="title">Loading</h2>
+    <button type="button" class="btn btn-primary" id="newMemory" hidden>New memory</button>
+  </div>
+  <div id="pathline"><span id="path"></span><button type="button" class="btn btn-quiet btn-small" id="openFolder">Open folder</button></div>
+  <input type="search" id="search" placeholder="Filter files" aria-label="Filter files">
+  <div id="rows"></div>
+</section>
+
+<main id="pane">
+  <p class="blank" id="none">Pick a file to read it.</p>
+  <form id="sheet" hidden>
+    <div id="scroll">
+      <div id="paper">
+        <div class="tabline">
+          <div id="types" role="radiogroup" aria-label="Memory type"></div>
+          <div id="readers" aria-label="Read by"></div>
+          <div id="caption"></div>
+        </div>
+        <p id="orphan" hidden>
+          <span>The index does not list this memory, so Claude Code will not find it.</span>
+          <button type="button" class="btn" id="addIndex">Add to index</button>
+        </p>
+        <div id="fields">
+          <input class="field" id="fName" aria-label="Name" placeholder="memory-name" autocomplete="off" spellcheck="false">
+          <textarea class="field" id="fDesc" rows="1" aria-label="Description" placeholder="One line that tells the agent when this memory matters"></textarea>
+          <textarea class="field" id="fBody" aria-label="Memory text" placeholder="Write the fact here. For feedback and project memories, add a Why line and a How to apply line."></textarea>
+        </div>
+        <div id="rawWrap" hidden>
+          <h3 id="rawTitle"></h3>
+          <p id="rawNote"></p>
+          <textarea class="field" id="raw" aria-label="File content" spellcheck="false"></textarea>
+        </div>
+        <div id="links" hidden></div>
+      </div>
+    </div>
+    <div class="actions">
+      <button type="button" class="btn btn-quiet btn-stop" id="del">Move to trash</button>
+      <button type="button" class="btn btn-quiet" id="rawToggle">Edit raw file</button>
+      <button type="button" class="btn btn-quiet" id="revealFile">Show in folder</button>
+      <span class="spacer"></span>
+      <span id="state"></span>
+      <button type="button" class="btn" id="revert">Cancel</button>
+      <button type="submit" class="btn btn-primary" id="save">Save</button>
+      <button type="button" class="btn btn-primary" id="edit">Edit</button>
+    </div>
+  </form>
+</main>
+</div>
+
+<dialog id="trash" aria-labelledby="trashTitle">
+  <div class="thead">
+    <div>
+      <h2 id="trashTitle">Trash</h2>
+      <p id="trashDir"></p>
+    </div>
+    <button type="button" class="btn btn-quiet btn-stop" id="emptyTrash">Empty trash</button>
+    <button type="button" class="btn" id="closeTrash">Close</button>
+  </div>
+  <div class="tbody">
+    <div id="trashList"></div>
+    <div id="trashPreview">
+      <p id="trashMeta"></p>
+      <pre id="trashText"></pre>
+      <div class="tactions">
+        <button type="button" class="btn btn-quiet btn-stop" id="dropOne">Delete forever</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn btn-primary" id="restoreOne">Restore</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+<div id="toast" role="status"></div>
+</body>
+</html>

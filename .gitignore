@@ -1,0 +1,3 @@
+# Trashed memories are personal; they never belong in the repository.
+/trash/
+node_modules/

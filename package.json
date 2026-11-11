@@ -1,0 +1,35 @@
+{
+  "name": "agent-memory-desk",
+  "version": "0.1.0",
+  "description": "A local web page to read and edit the memory and instruction files of Claude Code, Codex, Kimi Code, DeepSeek dsh and OpenCode.",
+  "license": "MIT",
+  "bin": {
+    "agent-memory-desk": "bin/agent-memory-desk.js"
+  },
+  "main": "server.js",
+  "files": [
+    "bin/",
+    "lib/",
+    "public/",
+    "server.js"
+  ],
+  "scripts": {
+    "start": "node bin/agent-memory-desk.js start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lilb1tty/agent-memory-desk.git"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "claude-code",
+    "codex",
+    "agents-md",
+    "memory",
+    "kimi",
+    "deepseek",
+    "opencode"
+  ]
+}

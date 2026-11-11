@@ -1,0 +1,2 @@
+# LF everywhere: the CLI's #!/usr/bin/env node line fails on macOS and Linux with CRLF.
+* text=auto eol=lf
