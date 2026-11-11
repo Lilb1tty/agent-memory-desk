@@ -2,6 +2,12 @@
 
 One local web page to read and edit what your coding agents remember: the memory and instruction files of **Claude Code, Codex, Kimi Code, DeepSeek dsh and OpenCode**, across every project on your machine.
 
+![A Claude Code project memory open in Agent Memory Desk, with the project's instruction files and memories listed beside it](docs/screenshots/memory-light.png)
+
+![A project's AGENTS.md seen from the Codex tab in dark mode, marked as shared with Kimi Code, DeepSeek dsh and OpenCode](docs/screenshots/shared-agents-md-dark.png)
+
+<sub>Screenshots use made-up sample data. The page follows your system's light or dark setting.</sub>
+
 - **Agent first.** Pick an agent in the top bar, then its global files or one of its projects.
 - **Read, then edit.** Files open read-only; press **Edit** to change them. Saving rewrites only what you changed.
 - **Shared files are marked.** `AGENTS.md` is read by several agents, so the page tells you who else will see an edit.
@@ -93,6 +99,8 @@ The file records the full path to `node` and to the app. If you move the app fol
 2. **Pick a place** in the left column: **Global** (files that apply to every project) or a project. Only projects where that agent has files are listed; tick *Show projects with no files* to see every project it has been used in.
 3. **Pick a file** in the middle column. It opens read-only.
 4. **Edit** unlocks it. **Save** (or Ctrl+S / Cmd+S) writes it; **Cancel** throws the changes away.
+
+The address bar always points at the open file (`#agent/place/file`), so you can bookmark a memory.
 
 Other controls:
 
