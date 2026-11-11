@@ -11,7 +11,8 @@ const GROUPS = { instructions: 'Instructions', rules: 'Rules', memory: 'Memories
 // editing: false while a file is only being read; the Edit button turns it on.
 let places = [], found = [], labels = {}, harness = '', current = null, file, parts = null, mode = 'fields', saved = '', editing = false;
 const visible = () => current.files.filter((f) => f.harnesses.includes(harness));
-const go = (h, id) => { if (location.hash.slice(1) !== h + '/' + id) history.replaceState(null, '', '#' + h + '/' + id); };
+// The address is #agent/place/file, so any file can be bookmarked.
+const go = (...parts) => { const want = parts.filter(Boolean).join('/'); if (location.hash.slice(1) !== want) history.replaceState(null, '', '#' + want); };
 
 async function api(method, url, data) {
   const res = await fetch(url, {
@@ -171,6 +172,7 @@ function refresh() {
 // Put a file on the page. f: a file of the open place, or null for a new memory.
 function show(f) {
   file = f;
+  go(harness, current.id, f && f.id);
   const content = (f ? (f.tooLarge ? '(This file is larger than 2 MB. Open it in an editor.)' : f.content) : NEW_FILE).replace(/\r\n/g, '\n');
   parts = f === null || isMemory(f) ? split(content) : null;
   $('#none').hidden = true;
@@ -309,7 +311,6 @@ async function open(id, fileId) {
   const order = { instructions: 0, rules: 1, memory: 2 };
   current.files.sort((a, b) => order[a.group] - order[b.group] || (b.index ? 1 : 0) - (a.index ? 1 : 0) || (b.mtime - a.mtime));
   for (const f of current.files) f.meta = isMemory(f) ? meta(f.content) : {};
-  go(harness, id);
   // The folder the memory files sit in: Claude Code keeps project memories in its own home folder.
   const memoryDir = harness === 'claude' && current.claudeMemory ? current.claudeMemory.dir : null;
   const where = current.kind === 'global' ? current.homes[harness] : memoryDir || current.path;
@@ -323,7 +324,7 @@ async function open(id, fileId) {
   const mine = visible();
   const first = mine.find((f) => f.id === fileId) || mine.find((f) => f.exists && !f.index) || mine[0];
   if (first) show(first);
-  else { clearPage(); renderList(); }
+  else { go(harness, id); clearPage(); renderList(); }
 }
 
 // ---- Actions ----
@@ -420,12 +421,17 @@ $('#openFolder').onclick = () =>
 $('#revealFile').onclick = () =>
   api('POST', '/api/files/' + encodeURIComponent(file.id) + '/reveal', {}).catch((err) => toast(err.message));
 const fromHash = () => {
-  const [h, id] = location.hash.slice(1).split('/');
-  return { h: found.some((x) => x.id === h) ? h : harness, id: places.some((p) => p.id === id) ? id : 'global' };
+  const [h, id, f] = location.hash.slice(1).split('/');
+  return { h: found.some((x) => x.id === h) ? h : harness, id: places.some((p) => p.id === id) ? id : 'global', f };
 };
 window.addEventListener('hashchange', () => {
-  const { h, id } = fromHash();
-  if ((h !== harness || !current || current.id !== id) && leave()) pick(h, id).catch((err) => toast(err.message));
+  const { h, id, f } = fromHash();
+  if (h === harness && current && current.id === id) {
+    const target = f && current.files.find((x) => x.id === f);
+    if (target && target !== file && leave()) show(target);
+    return;
+  }
+  if (leave()) pick(h, id, f).catch((err) => toast(err.message));
 });
 
 // ---- Trash ----
@@ -497,7 +503,7 @@ for (const t of TYPES) {
 loadTrash().catch(() => {});
 load().then(() => {
   if (!harness) { $('#title').textContent = 'No supported agent found'; return; }
-  const { h, id } = fromHash();
-  return pick(h, id);
+  const { h, id, f } = fromHash();
+  return pick(h, id, f);
 }).catch((err) => toast(err.message));
 document.fonts && document.fonts.ready.then(() => { if (file !== undefined) refresh(); });
